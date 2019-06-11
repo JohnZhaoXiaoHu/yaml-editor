@@ -5,11 +5,19 @@ use 5.010;
 
 use Encode;
 
+use YAML::PP::Common;
 use YAML::PP::Parser;
+
 my $parser = YAML::PP::Parser->new(
   receiver => sub {
     my ($self, @args) = @_;
-    my $event = YAML::PP::Parser->event_to_test_suite(\@args);
+    my $event;
+    if (@args == 1) {
+        $event = YAML::PP::Common::event_to_test_suite($args[0]);
+    }
+    else {
+        $event = YAML::PP::Common::event_to_test_suite($args[1]);
+    }
     $event = encode_utf8($event);
     say $event;
   },
